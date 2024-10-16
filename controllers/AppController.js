@@ -1,9 +1,9 @@
-import redisClient from '../utils/redis';
-import dbClient from '../utils/db';
+const Redis = require('../utils/redis');
+const DB = require('../utils/db');
 
 class AppController {
     static getStatus(req, res) {
-        if (redisClient.isAlive() && dbClient.isAlive()) {
+        if (Redis.isAlive() && DB.isAlive()) {
             return res.status(200).json({ redis: true, db: true });
         }
         return res.status(400).send('Redis and MongoDB not connected');
@@ -11,8 +11,8 @@ class AppController {
 
     static getStats(req, res) {
         (async () => {
-            const users = await dbClient.nbUsers();
-            const files = await dbClient.nbFiles();
+            const users = await DB.nbUsers();
+            const files = await DB.nbFiles();
             return res.status(200).json({ users, files });
         })();
     }
